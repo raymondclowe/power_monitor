@@ -24,7 +24,9 @@ while true; do
     if [[ $FAIL_COUNT -ge $FAILURE_THRESHOLD ]]; then
       echo "$(date) - Ping failed $FAILURE_THRESHOLD times. Shutting down..."
       echo "Shutting down on $(hostname) at $(date) due to sustained power outage." | python "$TELEGRAM_SCRIPT" "$ALERT_RECIPIENT"
+      sleep 1
       sudo shutdown -h now
+      sleep 1
       exit 0 # Exit the script
     fi
   else

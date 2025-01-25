@@ -8,7 +8,9 @@ TELEGRAM_SCRIPT="/home/pi/telegram-send-file/tgsnd.py"
 
 FAIL_COUNT=0
 
-echo "Power monitoring on $(hostname) started at $(date)" | python "$TELEGRAM_SCRIPT" "$ALERT_RECIPIENT"
+sleep 1
+echo "Power monitoring on $(hostname) starting in 60 seconds at $(date)" | python "$TELEGRAM_SCRIPT" "$ALERT_RECIPIENT"
+sleep 60
 
 while true; do
   ping -c 1 "$TARGET_IP" > /dev/null 2>&1

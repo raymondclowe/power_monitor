@@ -6,10 +6,10 @@ Requires=network-online.target
 
 [Service]
 Type=simple
-ExecStart=/home/pi/power_monitor.sh
+ExecStart=/home/pi/power_monitor/power_monitor.sh
 Restart=always
 User=pi
-WorkingDirectory=/home/pi
+WorkingDirectory=/home/pi/power_monitor/
 
 [Install]
 WantedBy=multi-user.target

@@ -34,7 +34,7 @@ while true; do
     if [[ $FAIL_COUNT -ge $FAILURE_THRESHOLD ]]; then
       echo "$(date) - Ping failed $FAILURE_THRESHOLD times. Shutting down..."
       send_alert "Shutting down on $(hostname) at $(date) due to sustained power outage."
-      sudo shutdown -h now
+      sudo shutdown --poweroff now
       exit 0 # Exit the script
     fi
   else

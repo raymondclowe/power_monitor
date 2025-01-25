@@ -7,10 +7,18 @@ ALERT_RECIPIENT="raymond" # Telegram recipient
 TELEGRAM_SCRIPT="/home/pi/telegram-send-file/tgsnd.py"
 
 FAIL_COUNT=0
+# Function to send alert using Telegram or log if it doesn't exist
+send_alert() {
+  local message="$1"
+  if [[ -x "$TELEGRAM_SCRIPT" ]]; then
+      echo "$message" | python "$TELEGRAM_SCRIPT" "$ALERT_RECIPIENT"
+  else
+    echo "$(date) - Telegram script not found: $message" >&2
+  fi
+}
 
-sleep 1
-echo "Power monitoring on $(hostname) starting in 60 seconds at $(date)" | python "$TELEGRAM_SCRIPT" "$ALERT_RECIPIENT"
-sleep 60
+
+send_alert "Power monitoring on $(hostname) started at $(date)"
 
 while true; do
   ping -c 1 "$TARGET_IP" > /dev/null 2>&1
@@ -20,20 +28,18 @@ while true; do
     
     # Send an alert on the first failure
     if [[ $FAIL_COUNT -eq 1 ]]; then
-        echo "Power Outage Detected on $(hostname) at $(date) (ping failed). Alerting $ALERT_RECIPIENT." | python "$TELEGRAM_SCRIPT" "$ALERT_RECIPIENT"
+        send_alert "Power Outage Detected on $(hostname) at $(date) (ping failed). Alerting $ALERT_RECIPIENT."
     fi
 
     if [[ $FAIL_COUNT -ge $FAILURE_THRESHOLD ]]; then
       echo "$(date) - Ping failed $FAILURE_THRESHOLD times. Shutting down..."
-      echo "Shutting down on $(hostname) at $(date) due to sustained power outage." | python "$TELEGRAM_SCRIPT" "$ALERT_RECIPIENT"
-      sleep 1
+      send_alert "Shutting down on $(hostname) at $(date) due to sustained power outage."
       sudo shutdown -h now
-      sleep 1
       exit 0 # Exit the script
     fi
   else
      if [[ $FAIL_COUNT -gt 0 ]]; then
-        echo "Power Recovered on $(hostname) at $(date). Ping successful to $TARGET_IP. Alerting $ALERT_RECIPIENT." | python "$TELEGRAM_SCRIPT" "$ALERT_RECIPIENT"
+        send_alert "Power Recovered on $(hostname) at $(date). Ping successful to $TARGET_IP. Alerting $ALERT_RECIPIENT."
      fi
     FAIL_COUNT=0 # Reset the failure count on success
     echo "$(date) - Ping successful to $TARGET_IP. Resetting failure count."

@@ -16,12 +16,12 @@ while true; do
     
     # Send an alert on the first failure
     if [[ $FAIL_COUNT -eq 1 ]]; then
-        echo "Power Outage Detected (ping failed). Alerting $ALERT_RECIPIENT." | "$TELEGRAM_SCRIPT" "$ALERT_RECIPIENT"
+        echo "Power Outage Detected (ping failed). Alerting $ALERT_RECIPIENT." | python "$TELEGRAM_SCRIPT" "$ALERT_RECIPIENT"
     fi
 
     if [[ $FAIL_COUNT -ge $FAILURE_THRESHOLD ]]; then
       echo "$(date) - Ping failed $FAILURE_THRESHOLD times. Shutting down..."
-      echo "Shutting down due to sustained power outage." | "$TELEGRAM_SCRIPT" "$ALERT_RECIPIENT"
+       echo "Shutting down due to sustained power outage." | python "$TELEGRAM_SCRIPT" "$ALERT_RECIPIENT"
       shutdown -h now
       exit 0 # Exit the script
     fi

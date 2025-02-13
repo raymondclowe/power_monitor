@@ -44,5 +44,5 @@ while true; do
     FAIL_COUNT=0 # Reset the failure count on success
     echo "$(date) - Ping successful to $TARGET_IP. Resetting failure count."
   fi
-  sleep 300  # Sleep for 5 minutes
+  sleep 60  # Sleep for 1 minute
 done

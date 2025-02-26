@@ -1,0 +1,1 @@
+but if it does this will it be fail if there are 4 failed attempts and 1 success. does it matter the order. i mean with the ping -c 5 using if -eq 0

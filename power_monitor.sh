@@ -21,7 +21,7 @@ send_alert() {
 send_alert "Power monitoring on $(hostname) started at $(date)"
 
 while true; do
-  ping -c 1 "$TARGET_IP" > /dev/null 2>&1
+  ping -c 5 -W 30 "$TARGET_IP" > /dev/null 2>&1
   if [[ $? -ne 0 ]]; then
     FAIL_COUNT=$((FAIL_COUNT + 1))
     echo "$(date) - Ping failed to $TARGET_IP. Count: $FAIL_COUNT"
